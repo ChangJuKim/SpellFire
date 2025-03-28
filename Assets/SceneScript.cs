@@ -1,7 +1,8 @@
 using Mirror;
+using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace QuickStart
 {
@@ -11,6 +12,9 @@ namespace QuickStart
         public PlayerScript playerScript;
 
         public SceneReference sceneReference;
+
+        // todo: change sceneNames to dynamically get the names of the scenes of maps (and not the menus) somehow
+        private string[] sceneNames = {"Map1", "Map2"};
 
         [SyncVar(hook = nameof(OnStatusTextChanged))]
         public string statusText;
@@ -25,6 +29,21 @@ namespace QuickStart
         {
             if (playerScript != null)
                 playerScript.CmdSendPlayerMessage();
+        }
+
+        public void ButtonChangeScene()
+        {
+            if (isServer)
+            {
+                Scene scene = SceneManager.GetActiveScene();
+                int index = Array.FindIndex(sceneNames, elem => elem == scene.name);
+                if (index == -1)
+                    NetworkManager.singleton.ServerChangeScene(sceneNames[0]);
+                else
+                    NetworkManager.singleton.ServerChangeScene(sceneNames[(index + 1) % sceneNames.Length]);
+            }
+            else
+                Debug.Log("You are not Host.");
         }
     }
 }
