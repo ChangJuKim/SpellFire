@@ -1,18 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using Mirror;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class SceneScript : MonoBehaviour
+namespace QuickStart
 {
-    // Start is called before the first frame update
-    void Start()
+    public class SceneScript : NetworkBehaviour
     {
-        
-    }
+        public TMP_Text canvasStatusText;
+        public PlayerScript playerScript;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public SceneReference sceneReference;
+
+        [SyncVar(hook = nameof(OnStatusTextChanged))]
+        public string statusText;
+
+        void OnStatusTextChanged(string _Old, string _New)
+        {
+            //called from sync var hook, to update info on screen for all players
+            canvasStatusText.text = statusText;
+        }
+
+        public void ButtonSendMessage()
+        {
+            if (playerScript != null)
+                playerScript.CmdSendPlayerMessage();
+        }
     }
 }
