@@ -51,8 +51,8 @@ MonoBehaviour:
   headlessStartMode: 0
   editorAutoStart: 0
   sendRate: 60
-  offlineScene: Assets/Scenes/MirrorScene.unity
-  onlineScene: Assets/Scenes/MirrorScene.unity
+  offlineScene: Assets/Scenes/Menu.unity
+  onlineScene: Assets/Scenes/Map1.unity
   offlineSceneLoadDelay: 0
   transport: {fileID: 0}
   networkAddress: localhost
