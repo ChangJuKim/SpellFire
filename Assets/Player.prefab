@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2206284534053842119}
   - component: {fileID: 7070064849682306728}
   - component: {fileID: 5537299116206402813}
+  - component: {fileID: -712950199864819751}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -180,6 +181,30 @@ MonoBehaviour:
   floatingInfo: {fileID: 7738043448583844585}
   playerName: 
   playerColor: {r: 1, g: 1, b: 1, a: 1}
+  _agent: {fileID: -712950199864819751}
+  tempSpell: {fileID: 11400000, guid: 57d4849111a47344da48e236963dddde, type: 2}
+--- !u!195 &-712950199864819751
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30315755119922132}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &6603181330237794352
 GameObject:
   m_ObjectHideFlags: 0
