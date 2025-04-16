@@ -73,5 +73,6 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-# Mirror assets
+# Thid party packages
 /[Aa]ssets/Mirror/*
+/[Aa]ssets/AddressableAssetsData/*
