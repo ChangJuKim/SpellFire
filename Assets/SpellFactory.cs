@@ -59,9 +59,9 @@ public class SpellFactory
         }
     }
 
-    public async Task<GameObject> LoadPrefab(string visualPrefab)
+    public async Task<GameObject> LoadPrefab(string visualPrefabAddress)
     {
-        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(visualPrefab);
+        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(visualPrefabAddress);
         GameObject prefab = await handle.Task;
 
         if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -70,7 +70,7 @@ public class SpellFactory
         }
         else
         {
-            Debug.LogError($"Failed to load prefab at address: {visualPrefab}");
+            Debug.LogError($"Failed to load prefab at address: {visualPrefabAddress}");
             return null;
         }
     }
