@@ -1,6 +1,8 @@
 using Mirror;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,8 +27,7 @@ namespace QuickStart
         [SerializeField] private NavMeshAgent _agent = null;
 
         // Spells
-        public readonly SpellData[] spells = new SpellData[7]; // QWERASD, OOOODDD [O]ffensive [D]efensive
-        public SpellData tempSpell;
+        public Guid[] spells = new Guid[7]; // QWERASD
 
         void OnNameChanged(string _Old, string _New)
         {
@@ -46,9 +47,20 @@ namespace QuickStart
             floatingInfo.transform.localPosition = new Vector3(0, -0.2f, 0.6f);
             floatingInfo.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
-            string name = "Player" + Random.Range(100, 999);
-            Color color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+            string name = "Player" + UnityEngine.Random.Range(100, 999);
+            Color color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
             CmdSetupPlayer(name, color);
+
+            // Spells
+            List<Guid> QSpells = SpellRegistry.GetSpellsByKeyCode(KeyCode.Q);
+            if (QSpells == null || !QSpells.Any())
+            {
+                Debug.LogError($"Unable to get any spells in slot Q");
+                return;
+            }
+            Debug.Log($"Loaded in Spell {SpellRegistry.Get(spells[0])}");
+            spells[0] = QSpells[0];
+            
         }
 
         [Command]
@@ -65,7 +77,7 @@ namespace QuickStart
         {
             if (sceneScript)
             {
-                sceneScript.statusText = $"{playerName} says hello {Random.Range(10, 99)}";
+                sceneScript.statusText = $"{playerName} says hello {UnityEngine.Random.Range(10, 99)}";
             }
         }
 
@@ -73,6 +85,7 @@ namespace QuickStart
         {
             // allow all players to run this
             sceneScript = GameObject.Find("SceneReference").GetComponent<SceneReference>().sceneScript;
+
         }
 
         void Update()
@@ -122,7 +135,6 @@ namespace QuickStart
             if (spells[0] == null)
             {
                 Debug.Log("Spell doesn't exist: setting spell to temp spell");
-                SetSpell(0, tempSpell);
             }
 
             // Destination
@@ -138,25 +150,18 @@ namespace QuickStart
         }
 
         [Command]
-        void CmdCastSpell(SpellData spellData, Vector3 origin, Vector3 destination)
+        void CmdCastSpell(Guid spellGuid, Vector3 origin, Vector3 destination)
         {
+            GameObject spell = SpellRegistry.Get(spellGuid);
 
             // Creation
-            GameObject spell = Instantiate(spellData.spellPrefab, origin, Quaternion.identity);
-            NetworkServer.Spawn(spell);
-
-            SpellBehavior spellBehavior = spell.AddComponent<SpellBehavior>();
-            spellBehavior.spellData = spells[0];
+            GameObject clone = Instantiate(spell, origin, Quaternion.identity);
+            clone.AddComponent<NetworkIdentity>();
+            NetworkServer.Spawn(clone);
             
             // Rotation
-            spell.transform.LookAt(destination);
-            spell.transform.rotation = Quaternion.Euler(0f, spell.transform.rotation.eulerAngles.y, 0f);
-         
-        }
-
-        void SetSpell(int index, SpellData spellData)
-        {
-            spells[index] = spellData;
+            clone.transform.LookAt(destination);
+            clone.transform.rotation = Quaternion.Euler(0f, clone.transform.rotation.eulerAngles.y, 0f);
         }
     }
 }

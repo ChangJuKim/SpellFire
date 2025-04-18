@@ -5,27 +5,31 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class SpellFactory
+public static class SpellFactory
 {
+    
     // Dummy values for testing
-    private static readonly string[] VISUAL_PREFAB_ADDRESSES = new string[2] { "FireballVisual", "SpellTwoVisual" };
-    public static readonly SpellData[] SPELL_DATAS = new SpellData[2];
+    private static readonly string[] VISUAL_PREFAB_ADDRESSES = new string[2] { "Fireball", "Cube" };
+
+    public static async Task InitializeSpellsAsync()
+    {
+        await ParseJSON("Temp stuff");
+        // Other things to do when initializing
+    }
 
     // For now, creates dummy values
     // Does 3 things:
     // 1. Gets the visual prefabs
     // 2. Parses JSON to SpellData
     // 3. Attaches the above two and SpellBehavior to a new GameObject and puts that in the SpellRegistry
-    public void ParseJSON(string json)
+    public static async Task ParseJSON(string json)
     {
-        CreateDummySpellsAsync();
+        await CreateDummySpellsAsync();
     }
 
     // Creates two spells
-    private async void CreateDummySpellsAsync()
+    private static async Task CreateDummySpellsAsync()
     {
-        Assert.IsTrue(VISUAL_PREFAB_ADDRESSES.Length == SPELL_DATAS.Length);
-
         // 0. Pre-set data
         GameObject visualPrefab = null;
         SpellData spellData = null;
@@ -44,7 +48,7 @@ public class SpellFactory
             }
 
             // 2. Parse JSON to SpellData
-            spellData = SPELL_DATAS[i];
+            spellData = ScriptableObject.CreateInstance<SpellData>();
 
             // 3. Attach to new GameObject and register
             GameObject newSpell = new GameObject($"Spell_{spellData.name ?? $"Unnamed_{i}"}");
@@ -55,11 +59,11 @@ public class SpellFactory
             SpellBehavior spellBehavior = newSpell.AddComponent<SpellBehavior>();
             spellBehavior.spellData = spellData;
 
-            SpellRegistry.Add(Guid.NewGuid(), newSpell);
+            SpellRegistry.Add(Guid.NewGuid(), KeyCode.Q, newSpell);
         }
     }
 
-    public async Task<GameObject> LoadPrefab(string visualPrefabAddress)
+    private static async Task<GameObject> LoadPrefab(string visualPrefabAddress)
     {
         AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(visualPrefabAddress);
         GameObject prefab = await handle.Task;

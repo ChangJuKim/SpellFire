@@ -6,25 +6,13 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class SpellRegistry : MonoBehaviour
+public static class SpellRegistry
 {
-
-    public static SpellRegistry Instance { get; private set; }
-
     private static Dictionary<Guid, GameObject> _spellMap = new Dictionary<Guid, GameObject>();
+    
+    private static Dictionary<KeyCode, List<Guid>> _keyToSpellList = new Dictionary<KeyCode, List<Guid>>();
 
-    private void Awake()
-    {
-        if (Instance == null && Instance != this)
-        {
-            Destroy(this);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(this);
-    }
-
-    public static void Add(Guid guid, GameObject spellPrefab)
+    public static void Add(Guid guid, KeyCode keyCode, GameObject spellPrefab)
     {
         if (_spellMap.ContainsKey(guid))
         {
@@ -32,6 +20,12 @@ public class SpellRegistry : MonoBehaviour
         }
 
         _spellMap[guid] = spellPrefab;
+
+        if (!_keyToSpellList.ContainsKey(keyCode))
+        {
+            _keyToSpellList[keyCode] = new List<Guid>();
+        }
+        _keyToSpellList[keyCode].Add(guid);
     }
 
     public static GameObject Get(Guid guid)
@@ -45,14 +39,24 @@ public class SpellRegistry : MonoBehaviour
         return null;
     }
 
-    public static async Task LoadAndAddSpell(Guid guid, string address)
+    public static List<Guid> GetSpellsByKeyCode(KeyCode keyCode)
+    {
+        if (!_keyToSpellList.ContainsKey(keyCode))
+        {
+            Debug.LogError($"There are no spells mapped to keyCode {keyCode}");
+            return null;
+        }
+        return _keyToSpellList[keyCode];
+    }
+
+    public static async Task LoadAndAddSpell(Guid guid, KeyCode keyCode, string address)
     {
         AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(address);
         GameObject spellPrefab = await handle.Task;
 
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
-            Add(guid, spellPrefab);
+            Add(guid, keyCode, spellPrefab);
         }
         else
         {

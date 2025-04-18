@@ -13,4 +13,13 @@ public class SpellData : ScriptableObject
     public float duration;
 
     // Also have triggers and events
+
+    public SpellData()
+    {
+        speed = 5;
+        range = -1;
+        damage = 0;
+        push = 0;
+        duration = -1;
+    }
 }
