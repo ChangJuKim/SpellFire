@@ -58,8 +58,9 @@ namespace QuickStart
                 Debug.LogError($"Unable to get any spells in slot Q");
                 return;
             }
-            Debug.Log($"Loaded in Spell {SpellRegistry.Get(spells[0])}");
             spells[0] = QSpells[0];
+            Debug.Log($"Spell Q is now Spell with Guid {spells[0]}");
+            Debug.Log($"Loaded in Spell '{SpellRegistry.Get(spells[0])}'.");
             
         }
 

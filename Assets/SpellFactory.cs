@@ -30,6 +30,11 @@ public static class SpellFactory
     // Creates two spells
     private static async Task CreateDummySpellsAsync()
     {
+        if (VISUAL_PREFAB_ADDRESSES == null || VISUAL_PREFAB_ADDRESSES.Length == 0)
+        {
+            Debug.Log("No visual prefabs");
+        }
+
         // 0. Pre-set data
         GameObject visualPrefab = null;
         SpellData spellData = null;
