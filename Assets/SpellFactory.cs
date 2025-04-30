@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mirror;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
@@ -10,6 +12,13 @@ public static class SpellFactory
     
     // Dummy values for testing
     private static readonly string[] VISUAL_PREFAB_ADDRESSES = new string[2] { "Fireball", "Cube" };
+
+    private static Dictionary<int, Guid> hashToGuid = new Dictionary<int, Guid>();
+
+    private static int CreateDummyHash(int index)
+    {
+        return index;
+    }
 
     public static async Task InitializeSpellsAsync()
     {
@@ -35,13 +44,13 @@ public static class SpellFactory
             Debug.Log("No visual prefabs");
         }
 
-        // 0. Pre-set data
-        GameObject visualPrefab = null;
-        SpellData spellData = null;
-
         for (int i = 0; i < VISUAL_PREFAB_ADDRESSES.Length; i++)
         {
-            // 1. Visual prefabs
+            // 1. Pre-set data
+            GameObject visualPrefab = null;
+            SpellData spellData = null;
+
+            // 2. Visual prefabs
             GameObject prefab = await LoadPrefab(VISUAL_PREFAB_ADDRESSES[i]);
             if (prefab != null)
             {
@@ -52,10 +61,10 @@ public static class SpellFactory
                 Debug.LogError($"Unable to get visual prefab {VISUAL_PREFAB_ADDRESSES[i]}");
             }
 
-            // 2. Parse JSON to SpellData
+            // 3. Parse JSON to SpellData
             spellData = ScriptableObject.CreateInstance<SpellData>();
 
-            // 3. Attach to new GameObject and register
+            // 4. Attach to new GameObject and register
             GameObject newSpell = new GameObject($"Spell_{spellData.name ?? $"Unnamed_{i}"}");
             GameObject.DontDestroyOnLoad(newSpell);
             
@@ -64,8 +73,34 @@ public static class SpellFactory
             SpellBehavior spellBehavior = newSpell.AddComponent<SpellBehavior>();
             spellBehavior.spellData = spellData;
 
-            SpellRegistry.Add(Guid.NewGuid(), KeyCode.Q, newSpell);
+            Guid spellGuid;
+            if (NetworkServer.active)
+            {
+                spellGuid = Guid.NewGuid();
+                hashToGuid.Add(i, spellGuid);
+            }
+            else
+            {
+                if (!hashToGuid.TryGetValue(i, out spellGuid))
+                {
+                    Debug.LogError($"Client hashToGuid has no hash of {i}");
+                    continue;
+                }
+            }
+            SpellRegistry.Add(spellGuid, KeyCode.Q, newSpell);
         }
+
+        // 5. Send hash-to-guid mapping from server to clients
+        if (NetworkServer.active)
+        {
+            RPCSendHashToGuid(hashToGuid);
+        }
+    }
+
+    [ClientRpc]
+    private static void RPCSendHashToGuid(Dictionary<int, Guid> otherHashToGuid)
+    {
+        hashToGuid = otherHashToGuid;
     }
 
     private static async Task<GameObject> LoadPrefab(string visualPrefabAddress)
