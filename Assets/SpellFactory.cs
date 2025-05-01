@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Mirror;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Assertions;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 public static class SpellFactory
@@ -14,6 +13,7 @@ public static class SpellFactory
     private static readonly string[] VISUAL_PREFAB_ADDRESSES = new string[2] { "Fireball", "Cube" };
 
     private static Dictionary<int, Guid> hashToGuid = new Dictionary<int, Guid>();
+    private static Boolean serverloadedSpellsFlag = false;
 
     private static int CreateDummyHash(int index)
     {
@@ -22,7 +22,7 @@ public static class SpellFactory
 
     public static async Task InitializeSpellsAsync()
     {
-        await ParseJSON("Temp stuff");
+        await ParseJSONAsync("Temp stuff");
         // Other things to do when initializing
     }
 
@@ -31,7 +31,7 @@ public static class SpellFactory
     // 1. Gets the visual prefabs
     // 2. Parses JSON to SpellData
     // 3. Attaches the above two and SpellBehavior to a new GameObject and puts that in the SpellRegistry
-    public static async Task ParseJSON(string json)
+    public static async Task ParseJSONAsync(string json)
     {
         await CreateDummySpellsAsync();
     }
