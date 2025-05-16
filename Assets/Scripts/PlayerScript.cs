@@ -15,8 +15,7 @@ namespace QuickStart
 
         // Can't I just delete this private variable and make a local variable in OnColorChanged?
         private Material playerMaterialClone;
-        private SceneScript sceneScript;
-
+        
         [SyncVar(hook = nameof(OnNameChanged))]
         public string playerName;
 
@@ -70,22 +69,12 @@ namespace QuickStart
             // player info sent to server, then server updates sync vars which handles it on all clients
             playerName = _name;
             playerColor = _col;
-            sceneScript.statusText = $"{playerName} joined.";
-        }
-
-        [Command]
-        public void CmdSendPlayerMessage()
-        {
-            if (sceneScript)
-            {
-                sceneScript.statusText = $"{playerName} says hello {UnityEngine.Random.Range(10, 99)}";
-            }
         }
 
         private void Awake()
         {
             // allow all players to run this
-            sceneScript = GameObject.Find("SceneReference").GetComponent<SceneReference>().sceneScript;
+            // sceneScript = GameObject.Find("SceneReference").GetComponent<SceneReference>().sceneScript;
 
         }
 
