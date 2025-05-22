@@ -19,7 +19,13 @@ public class JoinLobbyMenu : MonoBehaviour
         NetworkManagerLobby.OnClientDisconnected += HandleClientDisconnected;
     }
 
-    private void JoinLobby()
+    private void OnDisable()
+    {
+        NetworkManagerLobby.OnClientConnected -= HandleClientConnected;
+        NetworkManagerLobby.OnClientDisconnected -= HandleClientDisconnected;
+    }
+
+    public void JoinLobby()
     {
         string ipAddress = ipAddressInputField.text;
 

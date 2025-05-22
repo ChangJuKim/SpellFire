@@ -30,18 +30,18 @@ public class PlayerNameInput : MonoBehaviour
 
         nameInputField.text = defaultName;
 
-        SetPlayerName(defaultName);
+        SetPlayerName();
     }
 
-    public void SetPlayerName(string name)
+    public void SetPlayerName()
     {
-        continueButton.interactable = !string.IsNullOrEmpty(name);
+        continueButton.interactable = !string.IsNullOrEmpty(nameInputField.text);
     }
 
     public void SavePlayerName()
     {
         DisplayName = nameInputField.text;
 
-        PlayerPrefs.SetString(PLAYER_PREFS_NAME_KEY, name);
+        PlayerPrefs.SetString(PLAYER_PREFS_NAME_KEY, nameInputField.text);
     }
 }
