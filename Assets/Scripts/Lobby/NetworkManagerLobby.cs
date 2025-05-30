@@ -1,6 +1,7 @@
 using Mirror;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,12 +21,13 @@ public class NetworkManagerLobby : NetworkManager
     public override void OnStartServer()
     {
         // Load spawnable prefabs here
+        spawnPrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs").ToList();
     }
 
     public override void OnStartClient()
     {
         // Load spawnable prefabs here
-        var spawnablePrefabs = new GameObject[0];
+        var spawnablePrefabs = Resources.LoadAll<GameObject>("SpawnablePrefabs");
 
         foreach (var prefab in spawnablePrefabs)
         {
@@ -62,7 +64,7 @@ public class NetworkManagerLobby : NetworkManager
         }
     }
 
-    public override void OnServerDisconnect(NetworkConnection conn)
+    public override void OnServerDisconnect(NetworkConnectionToClient conn)
     {
         if (conn.identity != null)
         {
