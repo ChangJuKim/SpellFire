@@ -334,9 +334,11 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 3
   timeInterpolationGui: 0
-  minPlayers: 2
+  minPlayers: 1
   menuScene: Assets/Scenes/GamesList.unity
+  mapScene: Assets/Scenes/Map1.unity
   roomPlayerPrefab: {fileID: 715797522432933256, guid: 813dab571fde14b53a62d234e89a897a, type: 3}
+  gamePlayerPrefab: {fileID: 2894049245165854128, guid: 822d5889113184713bbfc2721aa85268, type: 3}
 --- !u!114 &415446833
 MonoBehaviour:
   m_ObjectHideFlags: 0

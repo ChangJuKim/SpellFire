@@ -9,14 +9,19 @@ public class NetworkManagerLobby : NetworkManager
 {
     [SerializeField] private int minPlayers = 2;
     [Scene] [SerializeField] private string menuScene = string.Empty;
+    [Scene] [SerializeField] private string mapScene = string.Empty;
 
     [Header("Room")]
     [SerializeField] private NetworkRoomPlayerLobby roomPlayerPrefab = null;
+
+    [Header("Game")]
+    [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
 
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
+    public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
 
     public override void OnStartServer()
     {
@@ -115,5 +120,38 @@ public class NetworkManagerLobby : NetworkManager
         }
 
         return true;
+    }
+
+    public void StartGame()
+    {
+        Debug.Log(SceneManager.GetActiveScene().path + ", " + menuScene);
+        if (SceneManager.GetActiveScene().path == menuScene)
+        {
+            if (!IsReadyToStart()) { return; }
+
+            ServerChangeScene(mapScene);
+        }
+    }
+
+    public override void ServerChangeScene(string newSceneName)
+    {
+        Debug.Log(SceneManager.GetActiveScene().path + ", " + menuScene);
+
+        if (SceneManager.GetActiveScene().path == menuScene && newSceneName == mapScene)
+        {
+            for (int i = RoomPlayers.Count - 1; i >= 0; i--)
+            {
+                var conn = RoomPlayers[i].connectionToClient;
+                var gamePlayerInstance = Instantiate(gamePlayerPrefab);
+                gamePlayerInstance.SetDisplayName(RoomPlayers[i].DisplayName);
+
+                NetworkServer.Destroy(conn.identity.gameObject);
+
+                NetworkServer.ReplacePlayerForConnection(conn, gamePlayerInstance.gameObject, new ReplacePlayerOptions());
+            }
+        }
+
+        base.ServerChangeScene(newSceneName);
+
     }
 }
