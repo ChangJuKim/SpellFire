@@ -80,7 +80,7 @@ namespace QuickStart
 
         void Update()
         {
-            if (!hasAuthority)
+            if (!isOwned)
             {
                 // make non-local players run this
                 floatingInfo.transform.LookAt(Camera.main.transform);

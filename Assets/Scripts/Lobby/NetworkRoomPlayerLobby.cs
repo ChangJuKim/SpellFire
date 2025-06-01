@@ -63,11 +63,11 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
 
     private void UpdateDisplay()
     {
-        if (!hasAuthority)
+        if (!isOwned)
         {
             foreach (var player in Room.RoomPlayers)
             {
-                if (player.hasAuthority)
+                if (player.isOwned)
                 {
                     player.UpdateDisplay();
                     break;
