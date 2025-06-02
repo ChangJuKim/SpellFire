@@ -16,9 +16,11 @@ public class NetworkManagerLobby : NetworkManager
 
     [Header("Game")]
     [SerializeField] private NetworkGamePlayerLobby gamePlayerPrefab = null;
+    [SerializeField] private GameObject playerSpawnSystem = null;
 
     public static event Action OnClientConnected;
     public static event Action OnClientDisconnected;
+    public static event Action<NetworkConnection> OnServerReadied;
 
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
     public List<NetworkGamePlayerLobby> GamePlayers { get; } = new List<NetworkGamePlayerLobby>();
@@ -124,7 +126,6 @@ public class NetworkManagerLobby : NetworkManager
 
     public void StartGame()
     {
-        Debug.Log(SceneManager.GetActiveScene().path + ", " + menuScene);
         if (SceneManager.GetActiveScene().path == menuScene)
         {
             if (!IsReadyToStart()) { return; }
@@ -135,8 +136,6 @@ public class NetworkManagerLobby : NetworkManager
 
     public override void ServerChangeScene(string newSceneName)
     {
-        Debug.Log(SceneManager.GetActiveScene().path + ", " + menuScene);
-
         if (SceneManager.GetActiveScene().path == menuScene && newSceneName == mapScene)
         {
             for (int i = RoomPlayers.Count - 1; i >= 0; i--)
@@ -153,5 +152,24 @@ public class NetworkManagerLobby : NetworkManager
 
         base.ServerChangeScene(newSceneName);
 
+    }
+
+    public override void OnServerSceneChanged(string sceneName)
+    {
+        Debug.Log("Running OnServerSceneChanged, should be seeing 'Setting Spawn System' ");
+        Debug.Log($"SceneName: {sceneName}");
+        if (sceneName.StartsWith("Assets/Scenes/Map"))
+        {
+            Debug.Log("Setting Spawn System");
+            GameObject playerSpawnSystemInstance = Instantiate(playerSpawnSystem);
+            NetworkServer.Spawn(playerSpawnSystemInstance);
+        }
+    }
+
+    public override void OnServerReady(NetworkConnectionToClient conn)
+    {
+        base.OnServerReady(conn);
+
+        OnServerReadied?.Invoke(conn);
     }
 }
