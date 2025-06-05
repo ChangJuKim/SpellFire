@@ -52,10 +52,8 @@ public class RoundSystem : NetworkBehaviour
     [Server]
     private void CheckToStartRound(NetworkConnection conn)
     {
-        Debug.Log($"Checking round start -- {Room.RoomPlayers.Count(x => x.connectionToClient.isReady)} -- {Room.GamePlayers.Count}");
         if (Room.GamePlayers.Count(x => x.connectionToClient.isReady) != Room.GamePlayers.Count) { return; }
 
-        Debug.Log("Starting countdown");
         animator.enabled = true;
 
         RpcStartCountdown();
@@ -64,7 +62,6 @@ public class RoundSystem : NetworkBehaviour
     #endregion
 
     #region Client
-
     [ClientRpc]
     private void RpcStartCountdown()
     {
