@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -8,8 +7,10 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public static class SpellRegistry
 {
+    // Temporarily exposing to inspector until I get SpellFactory working properly
+    [SerializeField]
     private static Dictionary<Guid, GameObject> _spellMap = new Dictionary<Guid, GameObject>();
-    
+    [SerializeField]
     private static Dictionary<KeyCode, List<Guid>> _keyToSpellList = new Dictionary<KeyCode, List<Guid>>();
 
     public static void Add(Guid guid, KeyCode keyCode, GameObject spellPrefab)
