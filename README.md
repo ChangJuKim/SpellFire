@@ -7,7 +7,6 @@ My third game, creating SpellFire -- a FFA battle arena in which players knock o
   - If joining a host on the same computer, *type* localhost and join
   - localhost is not typed in by default and will give you an error if you attempt to join without typing anything
 - Once all players are in the lobby and readied, click start on the host's game
-
 - Right click to move
 
 ## Installation Instructions
