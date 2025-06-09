@@ -10,7 +10,7 @@ My third game, creating SpellFire -- a FFA battle arena in which players knock o
 - Right click to move
 
 ## Installation Instructions
-- Download: [https://drive.google.com/drive/folders/1USLA4XtNkmy-_OsqMOl_cn8opmX4Zq7Q?usp=sharing](https://drive.google.com/drive/u/0/folders/1V92nGs4jmWYn7r648CbAwUtMRmgJDpIM) (currently supports Windows and Mac).
+- Go to [https://drive.google.com/drive/folders/1USLA4XtNkmy-_OsqMOl_cn8opmX4Zq7Q?usp=sharing](https://drive.google.com/drive/u/0/folders/1V92nGs4jmWYn7r648CbAwUtMRmgJDpIM) (currently supports Windows and Mac).
 - Download the appropriate zip file.
 - Extract zip file.
 - Run MageCraft.exe.
