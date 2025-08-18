@@ -1,7 +1,14 @@
 # SpellFire
-My third game, creating SpellFire -- a FFA battle arena in which players knock others out of the arena. This is not a completed game.
+My third game, creating SpellFire -- a FFA battle arena in which players knock others out of the arena. 
+
+THIS IS A WIP AND NOT A COMPLETED GAME.
 
 ![Demo](./Media/Demo1.gif)
+
+## Planned features
+- Reading JSON file of spell data -> generating spells during runtime
+  ![SpellCreationFlow](./Media/SpellCreation.png)
+  
 
 ## Instructions
 - Enter your display name
