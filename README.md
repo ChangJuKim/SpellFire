@@ -1,5 +1,7 @@
 # SpellFire
-My third game, creating SpellFire -- a FFA battle arena in which players knock others out of the arena.
+My third game, creating SpellFire -- a FFA battle arena in which players knock others out of the arena. This is not a completed game.
+
+![Demo](./Media/Demo1.gif)
 
 ## Instructions
 - Enter your display name
